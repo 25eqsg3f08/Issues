@@ -7,9 +7,7 @@
 <body>
   <h2>留言區</h2>
 
-  <!-- 可選：自訂輸入框（純展示，不直接提交到 GitHub） -->
-
-  <!-- utterances 評論系統，全球可用 -->
+  <!-- utterances 評論系統 -->
   <script src="https://utteranc.es/client.js"
           repo="25eqsg3f08/Issues"
           issue-term="pathname"
@@ -17,5 +15,29 @@
           crossorigin="anonymous"
           async>
   </script>
-  </body>
+
+  <h2>GitHub Issues 列表</h2>
+  <div id="issues"></div>
+
+  <script>
+    async function loadIssues() {
+      const response = await fetch("https://api.github.com/repos/25eqsg3f08/Issues/issues");
+      const issues = await response.json();
+      const container = document.getElementById("issues");
+
+      issues.forEach(issue => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <h3><a href="${issue.html_url}" target="_blank">${issue.title}</a></h3>
+          <p>作者: ${issue.user.login}</p>
+          <p>${issue.body ? issue.body.substring(0, 200) + "..." : "(無內容)"}</p>
+          <hr>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    loadIssues();
+  </script>
+</body>
 </html>
